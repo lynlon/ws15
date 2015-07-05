@@ -23,37 +23,37 @@ images_list="$path/image/images_list.log"
 key_name="~/.ssh/$public_key_name"
 key_validation="$path/logs/adding_key_pair.log"
 
-    main()
+main()
     {
         if [ -e "savi_config" ]; then
-            echo "Configuring Enviornmental variables. Please Wait.. "
+            echo "Configuring environment variables. Please Wait.. "
             source savi_config
         else    
             echo -n "Please Enter your USERID: "
                 read id
             echo -n "Please Enter your PASSWORD: "
                 read pass
-	    echo -n "Please Enter your Project-ID/Tenant Name: "
+            echo -n "Please Enter your Project-ID/Tenant Name: "
                  read tenant
             echo "export OS_USERNAME=$id" >> savi_config
             echo "export OS_PASSWORD=$pass" >> savi_config
             echo "export OS_REGION_NAME=EDGE-TR-1" >> savi_config
             echo "export OS_TENANT_NAME=$tenant" >> savi_config
             echo "export OS_AUTH_URL=http://iam.savitestbed.ca:5000/v2.0/" >> savi_config
-            echo "Configuring Enviornmental variables. Please Wait.. "
+            echo "Configuring environment variables. Please Wait.. "
             source savi_config
-	  nova list 2>> credentialcheck.log
-              credential_check=$(grep "ERROR" credentialcheck.log)
-                  if [ -z "$credential_check" ]; then
-                   echo "Enviornmental variables required for Savi Server set Successfully"
-                  else
-                          rm savi_config
-                          rm credentialcheck.log
-                          clear
-                          echo "INVALID Credentials provided. Please run the script again"
-                          exit
-                       fi
-             fi
+            nova list 2>> credentialcheck.log
+            credential_check=$(grep "ERROR" credentialcheck.log)
+                if [ -z "$credential_check" ]; then
+                   echo "Environment variables required for Savi Server set Successfully"
+                else
+                   rm savi_config
+                   rm credentialcheck.log
+                   #clear
+                   echo "INVALID Credentials provided. Please run the script again"
+                   exit
+                fi
+        fi
         
 
         case $cmnd in 
@@ -63,7 +63,7 @@ key_validation="$path/logs/adding_key_pair.log"
                     if [ -z "$vm_name" ]; then
                         echo "Not all the arguments are provided"
                     else   
-                        clear
+                        #clear
                         echo "Creating VM on Savi Instance.."
                         create_vm
                     fi   
@@ -81,7 +81,7 @@ key_validation="$path/logs/adding_key_pair.log"
                 fi   
             ;;
             createslice)   
-                clear
+                #clear
                 if [ "$client" = "SAVI" ]; then
                     echo "This feature is only available for GENI"
                 elif [ "$client" = "GENI" ]; then
@@ -94,7 +94,7 @@ key_validation="$path/logs/adding_key_pair.log"
                 fi   
             ;;   
             deleteslice)
-                clear
+                #clear
                 if [ "$client" = "SAVI" ]; then
                     echo "This feature is only available for GENI"
                 elif [ "$client" = "GENI" ]; then
@@ -107,7 +107,7 @@ key_validation="$path/logs/adding_key_pair.log"
                 fi   
             ;;   
             deletevm)
-                clear
+                #clear
                 if [ "$client" = "SAVI" ]; then
                     if [ -z "$vm_type" ]; then
                         echo "Not all the arguments are provided"
@@ -128,7 +128,7 @@ key_validation="$path/logs/adding_key_pair.log"
                 fi   
             ;;   
             listinstance)
-                clear
+                #clear
                 if [ -z "$slice_tenant_name" ]; then
                     echo "Not all arguments are provided"
                 else    
@@ -140,11 +140,11 @@ key_validation="$path/logs/adding_key_pair.log"
             ;;   
 
             location)
-                clear
+                #clear
                 location
             ;; 
             add_public_ip)
-                clear
+                #clear
                 add_public_ip
             ;; 
             *)
@@ -177,7 +177,7 @@ delete_slice()
 
 
 create_vm()
-     {
+    {
          #creating vm for GENI   
         if [ "$client" = "GENI" ]; then
             rspec_file="$path/rspecs/$vm_type.rspec"
@@ -205,32 +205,32 @@ create_vm()
              slice_tenant_name=$(echo $slice_tenant_name | tr 'A-Z' 'a-z')
              echo "export OS_TENANT_NAME=$slice_tenant_name" > current_savi_config
              location=$(echo $location | tr 'a-z' 'A-Z')
-             case $location in
-                 CORE)
-                    location="CORE"
-                ;;
-                WATERLOO)
-                    location="EDGE-WT-1"
-                ;;
-                CARLETON)
-                    location="EDGE-CT-1"
-                ;;
-                YORK)
-                    location="EDGE-YK-1"
-                ;;
-                TORONTO)
-                    location="EDGE-TR-1"
-                ;;
-                MCGILL)
-                    location="EDGE-MG-1"
-                ;;
-                CALGARY)
-                    location="EDGE-CG-1"
-                ;;
-                VICTORIA)
-                    location="EDGE-VC-1"
-                ;;   
-             esac
+             #case $location in
+             #    CORE)
+             #       location="CORE"
+             #   ;;
+             #   WATERLOO)
+             #       location="EDGE-WT-1"
+             #   ;;
+             #   CARLETON)
+             #       location="EDGE-CT-1"
+             #   ;;
+             #   YORK)
+             #       location="EDGE-YK-1"
+             #   ;;
+             #   TORONTO)
+             #       location="EDGE-TR-1"
+             #   ;;
+             #   MCGILL)
+             #       location="EDGE-MG-1"
+             #   ;;
+             #   CALGARY)
+             #       location="EDGE-CG-1"
+             #   ;;
+             #   VICTORIA)
+             #       location="EDGE-VC-1"
+             #   ;;   
+             #esac
              echo "export OS_REGION_NAME=$location" > current_savi_config
              source current_savi_config
              # vm_type=$(echo $vm_type | tr 'A-Z' 'a-z')
@@ -289,7 +289,7 @@ create_vm()
          fi               
 
                        
-     }   
+    }   
 
 delete_vm()
     {
@@ -301,32 +301,32 @@ delete_vm()
             # location=$(echo $location | tr 'a-z' 'A-Z')
             # export OS_REGION_NAME=$location
             location=$(echo $location | tr 'a-z' 'A-Z')
-             case $location in
-                 CORE)
-                    location="CORE"
-                ;;
-                WASHINGTON)
-                    location="EDGE-WT-1"
-                ;;
-                CANATICUT)
-                    location="EDGE-CT-1"
-                ;;
-                YORK)
-                    location="EDGE-YK-1"
-                ;;
-                TORONTO)
-                    location="EDGE-TR-1"
-                ;;
-                MACGILL)
-                    location="EDGE-MG-1"
-                ;;
-                CALGARY)
-                    location="EDGE-CG-1"
-                ;;
-                VICTORIA)
-                    location="EDGE-VC-1"
-                ;;   
-             esac
+            #case $location in
+            #    CORE)
+            #       location="CORE"
+            #   ;;
+            #   WASHINGTON)
+            #       location="EDGE-WT-1"
+            #   ;;
+            #   CANATICUT)
+            #       location="EDGE-CT-1"
+            #   ;;
+            #   YORK)
+            #       location="EDGE-YK-1"
+            #   ;;
+            #   TORONTO)
+            #       location="EDGE-TR-1"
+            #   ;;
+            #   MACGILL)
+            #       location="EDGE-MG-1"
+            #   ;;
+            #   CALGARY)
+            #       location="EDGE-CG-1"
+            #   ;;
+            #   VICTORIA)
+            #       location="EDGE-VC-1"
+            #   ;;   
+            #esac
             export OS_REGION_NAME=$location
             vm_name=$vm_type
             nova delete $vm_name 2> $vm_savi_deletion
@@ -385,35 +385,35 @@ list_instance()
             #      esac
             #     echo "Gathering information for the instance $current_instance"
             # else
-                slice_tenant_name=$(echo $slice_tenant_name | tr 'a-z' 'A-Z')
-                case $slice_tenant_name in
-                 CORE)
-                    slice_tenant_name="CORE"
-                ;;
-                WATERLOO)
-                    slice_tenant_name="EDGE-WT-1"
-                ;;
-                CARLETON)
-                    slice_tenant_name="EDGE-CT-1"
-                ;;
-                YORK)
-                    slice_tenant_name="EDGE-YK-1"
-                ;;
-                TORONTO)
-                    slice_tenant_name="EDGE-TR-1"
-                ;;
-                MCGILL)
-                    slice_tenant_name="EDGE-MG-1"
-                ;;
-                CALGARY)
-                    slice_tenant_name="EDGE-CG-1"
-                ;;
-                VICTORIA)
-                    slice_tenant_name="EDGE-VC-1"
-                ;;   
-             esac
-                 echo "$slice_tenant_name"
-                 export OS_REGION_NAME="$slice_tenant_name"   
+            slice_tenant_name=$(echo $slice_tenant_name | tr 'a-z' 'A-Z')
+            #case $slice_tenant_name in
+            #    CORE)
+            #        slice_tenant_name="CORE"
+            #    ;;
+            #    WATERLOO)
+            #        slice_tenant_name="EDGE-WT-1"
+            #    ;;
+            #    CARLETON)
+            #        slice_tenant_name="EDGE-CT-1"
+            #    ;;
+            #    YORK)
+            #        slice_tenant_name="EDGE-YK-1"
+            #    ;;
+            #    TORONTO)
+            #        slice_tenant_name="EDGE-TR-1"
+            #    ;;
+            #    MCGILL)
+            #        slice_tenant_name="EDGE-MG-1"
+            #    ;;
+            #    CALGARY)
+            #        slice_tenant_name="EDGE-CG-1"
+            #    ;;
+            #    VICTORIA)
+            #        slice_tenant_name="EDGE-VC-1"
+            #    ;;   
+            #esac
+            echo "$slice_tenant_name"
+            export OS_REGION_NAME="$slice_tenant_name"   
             # fi       
             echo "Gathering Information from Savi Servers..."
             # current_instance=$(env|grep OS_REGION_NAME|cut -s -d "=" -f2)
