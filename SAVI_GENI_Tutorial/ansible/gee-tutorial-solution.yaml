@@ -1,0 +1,54 @@
+---
+- hosts: nodes
+  sudo: yes
+  remote_user: "{{ ansible_ssh_user }}"
+  tasks:
+
+  ### (a): Get the container's FQDN ###
+  - name: Dump container name
+    debug: var=ansible_fqdn
+
+
+  ### (b):  Get the container IP address ###
+  - name: Dump container IP address
+    debug: var=ansible_eth0.ipv4.address
+
+
+  ### (c): Get the control host name ###
+  - name: Dump control host name
+    debug: var=ansible_ssh_host
+
+
+  ### (d): Get the host's public IP address ###
+  - name: Get my public IP
+    ###shell: dig +short {{ ansible_hostname }}
+    shell: curl ipecho.net/plain
+    register: public_ip
+
+  - name: Dump public_ip variable
+    debug: var=public_ip
+
+
+  - name: Run geoiplookup to get latitude
+    #shell: geoiplookup -f GeoLiteCity.dat {{ public_ip.stdout }} | awk -F ', ' '{print $7}'
+    shell: curl -s ipinfo.io | grep loc | sed "s/^.*loc..// " | sed "s/..$//" | sed "s/^.*\"//" | sed "s/,.*$//"
+    register: lat
+
+  - name: Dump lat variable
+    debug: var=lat
+
+  - name: Run geoiplookup to get longitude
+#    shell: geoiplookup -f GeoLiteCity.dat {{ public_ip.stdout }} | awk -F ', ' '{print $8}'
+    shell: curl -s ipinfo.io | grep loc | sed "s/^.*loc..// " | sed "s/..$//" | sed "s/^.*,//"
+    register: long
+
+  - name: Dump long variable
+    debug: var=long
+
+
+  ### (f): Fetch the parameterized URL ###
+
+  - shell: curl "http://www.lively-web.org/nodejs/GEETutorial/helloWorld?slice=<<GENI-Username>&name={{ansible_fqdn}}&ip={{public_ip.stdout }}&local={{ansible_eth0.ipv4.address}}&lat={{lat.stdout}}&lng={{long.stdout}}"
+    register: hello
+
+  - debug: var=hello
