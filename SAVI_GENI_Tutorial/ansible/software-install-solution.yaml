@@ -1,0 +1,17 @@
+---
+- hosts: nodes
+  remote_user: root
+  sudo: yes
+  tasks:
+  - name: Update apt cache
+    apt: update_cache=yes
+
+  - name: Install dnsutils (for dig)
+    apt: name=dnsutils
+
+  - name: Install geoip-bin (for geoiplookup)
+    apt: name=geoip-bin
+
+  - name: Install curl
+    apt: name=curl
+
