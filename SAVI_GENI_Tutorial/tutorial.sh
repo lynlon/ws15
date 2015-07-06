@@ -19,7 +19,7 @@ vm_geni_creation="$path/logs/vm_create_geni.log"
 vm_savi_creation="$path/logs/vm_create_savi.log"
 vm_savi_deletion="$path/logs/vm_delete_savi.log"
 vm_geni_deletion="$path/logs/vm_delete_geni.log"
-images_list="$path/image/images_list.log"
+images_list="$path/images/images_list.log"
 key_name="~/.ssh/$public_key_name"
 key_validation="$path/logs/adding_key_pair.log"
 
