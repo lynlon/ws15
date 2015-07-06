@@ -473,9 +473,29 @@ list_instance()
                              
 				 # i=$(($i + 1))
                     # done    
+                                #grep -o 'host name="*[^"]*"' sliver_instance.tmp  >> geni_inst_id.tmp
+                                #grep -o 'hostname="*[^"]*"' sliver_instance.tmp  >> geni_instance_address.tmp
+                                #grep -o 'port="*[^"]*"' sliver_instance.tmp >> geni_instance_port.tmp 
                                 grep -o 'host name="*[^"]*"' sliver_instance.tmp  >> geni_inst_id.tmp
-                                grep -o 'hostname="*[^"]*"' sliver_instance.tmp  >> geni_instance_address.tmp
-                                grep -o 'port="*[^"]*"' sliver_instance.tmp >> geni_instance_port.tmp  
+                                no_instance=$(cat geni_inst_id.tmp | wc -l)
+                                if [ $no_instance > 1 ]; then
+                                    grep -o 'hostname="*[^"]*"' sliver_instance.tmp  >> geni_instance_address_temp.tmp
+                                    grep -o 'port="*[^"]*"' sliver_instance.tmp >> geni_instance_port_temp.tmp
+                                    no_hostnames=$(grep -o 'hostname="*[^"]*"' sliver_instance.tmp | wc -l)
+                                    line_number=$(($no_hostnames/$no_instance))
+                                    j=1
+                                    i=1
+                                    while [ "$i" -le "$no_hostnames" ]; do
+                                        sed "$j q;d" geni_instance_address_temp.tmp >> geni_instance_address.tmp
+                                        sed "$j q;d" geni_instance_port_temp.tmp >> geni_instance_port.tmp
+
+                                        i=$(($i + 1))
+                                        j=$(($j + $line_number))
+                                    done
+                                else
+                                    grep -o 'hostname="*[^"]*"' sliver_instance.tmp  >> geni_instance_address.tmp
+                                    grep -o 'port="*[^"]*"' sliver_instance.tmp >> geni_instance_port.tmp
+                                fi
                     awk '{gsub("host name=","");print}' geni_inst_id.tmp > geni_instance_id.tmp 
                    grep -B 10 "pg_public_url" sliver_status.tmp > geni_status.tmp
                    if [[ -s geni_status.tmp ]] ; then 
