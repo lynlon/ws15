@@ -17,6 +17,9 @@ if [ "$REGION1" == "$REGION2" ]; then
     REGION2=EDGE-TR-1
 fi
 
+nova --os-region-name $REGION1 keypair-add --pub_key $HOME/.ssh/id_rsa.pub $KEY_NAME
+nova --os-region-name $REGION2 keypair-add --pub_key $HOME/.ssh/id_rsa.pub $KEY_NAME
+
 TEMP_KEY1=`nova --os-region-name $REGION1 keypair-list | grep $KEY_NAME | awk '{print $2}'`
 TEMP_KEY2=`nova --os-region-name $REGION2 keypair-list | grep $KEY_NAME | awk '{print $2}'`
 
